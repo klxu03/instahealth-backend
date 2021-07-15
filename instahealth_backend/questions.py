@@ -59,7 +59,7 @@ def questions_all():
             content = data["content"]
             author_name = data["authorName"]
 
-            assoc_dict = assoc.get_assoc_dict()
+            assoc_dict = get_assoc_dict()
             tags = set()
             for match in re.finditer(r"\w+", f"{question} {content}"):
                 word = match[0]
