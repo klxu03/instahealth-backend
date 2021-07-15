@@ -72,3 +72,19 @@ def register():
         return repr(e), 400
     else:
         return "", 200
+
+@bp.route("/account/<int:account_id>", methods=["GET"])
+def account_exists(account_id):
+    try:
+        db = get_db()
+
+        if db.execute(
+            "SELECT id FROM users WHERE id = ?",
+            [account_id],
+        ).fetchone() is not None:
+            raise ValueError("Account does not exist")
+
+    except Exception as e:
+        return repr(e), 400
+    else:
+        return {"id": account_id}, 200
