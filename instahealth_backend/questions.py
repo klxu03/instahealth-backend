@@ -5,6 +5,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from .db import get_db
 from .assoc import get_assoc_dict
+from .email import send_email
 
 bp = Blueprint("questions", __name__)
 
@@ -47,6 +48,14 @@ def format_answer(row):
         ]
     }
 
+category_to_role = {
+    "heart": "cardiologist",
+    "skin": "dermatologist",
+    "eye": "optometrist",
+    "teeth": "dentist",
+    "ear": "otolaryngologist",
+}
+
 def _add_question(data):
     db = get_db()
     question = data["question"]
@@ -74,6 +83,19 @@ def _add_question(data):
         db.execute("SELECT LAST_INSERT_ROWID()")
         .fetchone()["LAST_INSERT_ROWID()"]
     )
+
+    for category in categories.split():
+        role = category_to_role[category]
+        for row in db.execute(
+            "SELECT * FROM users WHERE role = ?",
+            [role],
+        ).fetchall():
+            try:
+                send_email(to=row["email"])
+            except Exception as e:
+                # Just in case the email doesn't exist (like during dev)
+                print(repr(e))
+
     return {"id": last_row_id}, 200
 
 @bp.route("/questions", methods=["GET", "POST"])
