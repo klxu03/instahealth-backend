@@ -49,6 +49,7 @@ def format_answer(row):
     }
 
 category_to_role = {
+    "general": "familyDoctor",
     "heart": "cardiologist",
     "skin": "dermatologist",
     "eye": "optometrist",
@@ -68,6 +69,8 @@ def _add_question(data):
         word = match[0]
         if word in assoc_dict:
             categories |= assoc_dict[word]
+    if not categories:
+        categories.add("general")
     categories = " ".join(sorted(categories))
 
     db.execute(
