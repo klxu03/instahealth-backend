@@ -83,7 +83,7 @@ def account_exists(account_id):
         db = get_db()
 
         row = db.execute(
-            "SELECT id FROM users WHERE id = ?",
+            "SELECT * FROM users WHERE id = ?",
             [account_id],
         ).fetchone()
         if row is None:
