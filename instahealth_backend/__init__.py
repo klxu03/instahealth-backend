@@ -20,6 +20,9 @@ def create_app(test_config=None):
     from . import questions
     app.register_blueprint(questions.bp)
 
+    from . import cors
+    cors.cors.init_app(app)
+
     @app.route("/")
     def root():
         return "<p>lol</p>"
