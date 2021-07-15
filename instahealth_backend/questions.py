@@ -86,7 +86,7 @@ def questions_all():
 
         else:
             data = request.get_json(force=True)
-            _add_question(data)
+            return _add_question(data)
 
     except Exception as e:
         return str(e), 400
