@@ -25,6 +25,6 @@ CREATE TABLE answers (
 	content TEXT NOT NULL,
 	role TEXT NOT NULL,
 	authorName TEXT NOT NULL,
-	datePosted INTEGER DEFAULT (CAST(strftime('%s','now') as int))
+	datePosted INTEGER DEFAULT (CAST(strftime('%s','now') as int)),
 	FOREIGN KEY (questionId) REFERENCES questions (id)
 );
