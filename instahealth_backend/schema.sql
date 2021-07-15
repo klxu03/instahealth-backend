@@ -14,6 +14,7 @@ CREATE TABLE questions (
 	question TEXT NOT NULL,
 	content TEXT NOT NULL,
 	authorName TEXT NOT NULL,
+	tags TEXT NOT NULL,
 	datePosted INTEGER DEFAULT (CAST(strftime('%s','now') as int))
 );
 

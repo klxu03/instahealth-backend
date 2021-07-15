@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from .db import get_db
+from .assoc import get_assoc_dict
 
 bp = Blueprint("questions", __name__)
 
@@ -15,6 +16,7 @@ def format_question(row):
             "question",
             "content",
             "authorName",
+            "tags",
             "datePosted",
         ]
     }
@@ -57,12 +59,20 @@ def questions_all():
             content = data["content"]
             author_name = data["authorName"]
 
+            assoc_dict = assoc.get_assoc_dict()
+            tags = set()
+            for match in re.finditer(r"\w+", f"{question} {content}"):
+                word = match[0]
+                if word in assoc_dict:
+                    tags |= assoc_dict[word]
+            tags = " ".join(sorted(tags))
+
             db.execute(
                 (
-                    "INSERT INTO questions (question, content, authorName)"
-                    " VALUES (?, ?, ?)"
+                    "INSERT INTO questions (question, content, authorName, tags)"
+                    " VALUES (?, ?, ?, ?)"
                 ),
-                [question, content, author_name],
+                [question, content, author_name, tags],
             )
             db.commit()
 
