@@ -1,0 +1,5 @@
+ear ear,hear,hearing,heard,sound,sounds,audio,loud,soft,quiet,deaf,ringing,hissing
+heart chest,heart,breathe,breathing,sugar,fat,cholesterol,weight,high blood pressure,blood,high,low,low blood pressure,cold,numb,numbness,wheezing
+eye see,vision,eye,double,blind,blindness,light,dark,gray,darkness,color,blur,blurred,blurry,blurriness,glass,glasses,glasse,dark,circle,dark circle,headache,sensitivity,red
+teeth speak,teeth,swallow,taste,gums,gum,inflame,enflame,inflammation,enflammation,tooth,cavity,dry socket,wisdom,wisdom teeth,breath,dry,dry mouth,sugar,ache
+skin itchy,itch,scratch,sweat,wart,pimple,acne,red,target,bump,freckle,chicken pox,white,pale,blue,bruise,cut,surgery,mole,scar,fire,burn,degree,burned,burnt,hair,sweaty,armpit,deodorant,smelly,odor,penis,vagina,clot,lesion,rash,burning,cold,cream,numb,numbness,peel,peeling,sensation,swelling,swell
