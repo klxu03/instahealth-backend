@@ -30,7 +30,7 @@ def login():
 
         if row is None:
             raise ValueError("email is not registered")
-        if not check_password_hash(user["password"], password):
+        if not check_password_hash(row["password"], password):
             raise ValueError("password is incorrect")
 
     except Exception as e:
