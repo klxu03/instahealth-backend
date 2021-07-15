@@ -36,7 +36,7 @@ def login():
     except Exception as e:
         return str(e), 400
     else:
-        return "", 200
+        return {"id": row["id"]}, 200
 
 @bp.route("/register", methods=["POST"])
 def register():
@@ -68,10 +68,14 @@ def register():
         )
         db.commit()
 
+        last_row_id = (
+            db.execute("SELECT LAST_INSERT_ROWID()")
+            .fetchone()["LAST_INSERT_ROWID()"]
+        )
+        return {"id": last_row_id}, 200
+
     except Exception as e:
         return repr(e), 400
-    else:
-        return "", 200
 
 @bp.route("/account/<int:account_id>", methods=["GET"])
 def account_exists(account_id):
