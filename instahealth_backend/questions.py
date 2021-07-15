@@ -18,10 +18,10 @@ def format_question(row):
             "question",
             "content",
             "authorName",
-            "tags",
             "datePosted",
         ]
     }
+    data["categories"] = row["categories"].split()
 
     question_id = data["id"]
     rows = db.execute(
@@ -50,19 +50,19 @@ def _add_question(data):
     author_name = data["authorName"]
 
     assoc_dict = get_assoc_dict()
-    tags = set()
+    categories = set()
     for match in re.finditer(r"\w+", f"{question} {content}"):
         word = match[0]
         if word in assoc_dict:
-            tags |= assoc_dict[word]
-    tags = " ".join(sorted(tags))
+            categories |= assoc_dict[word]
+    categories = " ".join(sorted(categories))
 
     db.execute(
         (
-            "INSERT INTO questions (question, content, authorName, tags)"
+            "INSERT INTO questions (question, content, authorName, categories)"
             " VALUES (?, ?, ?, ?)"
         ),
-        [question, content, author_name, tags],
+        [question, content, author_name, categories],
     )
     db.commit()
 
