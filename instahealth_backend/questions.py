@@ -141,3 +141,21 @@ def answer():
 
     except Exception as e:
         return str(e), 400
+
+@bp.route("/answers/<int:answer_id>", methods=["GET"])
+def answer_single(answer_id):
+    try:
+        db = get_db()
+
+        row = db.execute(
+            "SELECT * FROM answer WHERE id = ?",
+            [answer_id],
+        ).fetchone()
+
+        if row is None:
+            raise ValueError("answer not found")
+
+        return format_answer(row), 200
+
+    except Exception as e:
+        return str(e), 400
