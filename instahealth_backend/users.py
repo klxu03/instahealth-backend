@@ -7,7 +7,7 @@ bp = Blueprint('users', __name__)
 
 ROLES = [
     "patient",
-    "family-doctor",
+    "familyDoctor",
     "cardiologist",
     "dermatologist",
     "optometrist",
