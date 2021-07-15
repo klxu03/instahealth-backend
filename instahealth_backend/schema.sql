@@ -4,6 +4,5 @@ CREATE TABLE users (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	email TEXT UNIQUE NOT NULL,
 	password TEXT NOT NULL,
-	role TEXT NOT NULL,
-	profession TEXT
+	role TEXT NOT NULL
 );
