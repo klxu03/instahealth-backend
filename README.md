@@ -8,5 +8,7 @@ Create a virtual environment by running `python -m venv .venv` and enter it by r
 
 Install dependencies by running `pip install -r requirements.txt`.
 
+Set the environment variable `FLASK_ENV` to `development` for better debugging and hot reloading by running `set FLASK_ENV=development` on Windows or `export FLASK_ENV=development` on Linux.
+
 Run the app using `flask run`.
 
