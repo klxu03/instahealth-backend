@@ -43,6 +43,35 @@ def format_question(row):
 
     return data
 
+def _add_question(data):
+    db = get_db()
+    question = data["question"]
+    content = data["content"]
+    author_name = data["authorName"]
+
+    assoc_dict = get_assoc_dict()
+    tags = set()
+    for match in re.finditer(r"\w+", f"{question} {content}"):
+        word = match[0]
+        if word in assoc_dict:
+            tags |= assoc_dict[word]
+    tags = " ".join(sorted(tags))
+
+    db.execute(
+        (
+            "INSERT INTO questions (question, content, authorName, tags)"
+            " VALUES (?, ?, ?, ?)"
+        ),
+        [question, content, author_name, tags],
+    )
+    db.commit()
+
+    last_row_id = (
+        db.execute("SELECT LAST_INSERT_ROWID()")
+        .fetchone()["LAST_INSERT_ROWID()"]
+    )
+    return {"id": last_row_id}, 200
+
 @bp.route("/questions", methods=["GET", "POST"])
 def questions_all():
     try:
@@ -57,32 +86,7 @@ def questions_all():
 
         else:
             data = request.get_json(force=True)
-            question = data["question"]
-            content = data["content"]
-            author_name = data["authorName"]
-
-            assoc_dict = get_assoc_dict()
-            tags = set()
-            for match in re.finditer(r"\w+", f"{question} {content}"):
-                word = match[0]
-                if word in assoc_dict:
-                    tags |= assoc_dict[word]
-            tags = " ".join(sorted(tags))
-
-            db.execute(
-                (
-                    "INSERT INTO questions (question, content, authorName, tags)"
-                    " VALUES (?, ?, ?, ?)"
-                ),
-                [question, content, author_name, tags],
-            )
-            db.commit()
-
-            last_row_id = (
-                db.execute("SELECT LAST_INSERT_ROWID()")
-                .fetchone()["LAST_INSERT_ROWID()"]
-            )
-            return {"id": last_row_id}, 200
+            _add_question(data)
 
     except Exception as e:
         return str(e), 400
