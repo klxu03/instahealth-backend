@@ -5,6 +5,40 @@ from .db import get_db
 
 bp = Blueprint("questions", __name__)
 
+def format_question(row):
+    db = get_db()
+
+    data = {
+        key: row[key]
+        for key in [
+            "id",
+            "question",
+            "content",
+            "authorName",
+            "datePosted",
+        ]
+    }
+
+    question_id = data["id"]
+    rows = db.execute(
+        "SELECT * FROM answers WHERE questionId = ?",
+        [question_id],
+    ).fetchall()
+    answers = data["answers"] = []
+    for row in rows:
+        answers.append({
+            key: row[key]
+            for key in [
+                "id",
+                "content",
+                "authorName",
+                "role",
+                "datePosted",
+            ]
+        })
+
+    return data
+
 @bp.route("/questions", methods=["GET", "POST"])
 def questions_all():
     try:
@@ -13,19 +47,7 @@ def questions_all():
         if request.method == "GET":
             rows = db.execute("SELECT * FROM questions").fetchall()
 
-            response = jsonify([
-                {
-                    key: row[key]
-                    for key in [
-                        "id",
-                        "question",
-                        "content",
-                        "authorName",
-                        "datePosted",
-                    ]
-                }
-                for row in rows
-            ])
+            response = jsonify([format_question(row) for row in rows])
             response.status_code = 200
             return response
 
@@ -66,16 +88,36 @@ def questions_single(question_id):
         if row is None:
             raise ValueError("question not found")
 
-        return {
-            key: row[key]
-            for key in [
-                "id",
-                "question",
-                "content",
-                "authorName",
-                "datePosted",
-            ]
-        }, 200
+        return format_question(row), 200
+
+    except Exception as e:
+        return str(e), 400
+
+@bp.route("/answer", methods=["POST"])
+def answer():
+    try:
+        db = get_db()
+
+        data = request.get_json(force=True)
+        question_id = data["id"]
+        content = data["content"]
+        role = data["role"]
+        author_name = data["authorName"]
+
+        db.execute(
+            (
+                "INSERT INTO answers (questionId, content, role, authorName)"
+                " VALUES (?, ?, ?, ?)"
+            ),
+            [question_id, content, role, author_name],
+        )
+        db.commit()
+
+        last_row_id = (
+            db.execute("SELECT LAST_INSERT_ROWID()")
+            .fetchone()["LAST_INSERT_ROWID()"]
+        )
+        return {"id": last_row_id}, 200
 
     except Exception as e:
         return str(e), 400

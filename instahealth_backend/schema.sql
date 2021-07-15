@@ -16,3 +16,15 @@ CREATE TABLE questions (
 	authorName TEXT NOT NULL,
 	datePosted INTEGER DEFAULT (CAST(strftime('%s','now') as int))
 );
+
+DROP TABLE IF EXISTS answers;
+
+CREATE TABLE answers (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	questionId INTEGER NOT NULL,
+	content TEXT NOT NULL,
+	role TEXT NOT NULL,
+	authorName TEXT NOT NULL,
+	datePosted INTEGER DEFAULT (CAST(strftime('%s','now') as int))
+	FOREIGN KEY (questionId) REFERENCES questions (id)
+);
