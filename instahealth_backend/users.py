@@ -82,13 +82,21 @@ def account_exists(account_id):
     try:
         db = get_db()
 
-        if db.execute(
+        row = db.execute(
             "SELECT id FROM users WHERE id = ?",
             [account_id],
-        ).fetchone() is not None:
+        ).fetchone()
+        if row is None:
             raise ValueError("Account does not exist")
+
+        return {
+            key: row[key]
+            for key in [
+                "id",
+                "email",
+                "role",
+            ]
+        }, 200
 
     except Exception as e:
         return repr(e), 400
-    else:
-        return {"id": account_id}, 200
