@@ -1,3 +1,5 @@
+import re
+
 from flask import Blueprint, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 
