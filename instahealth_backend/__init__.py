@@ -14,17 +14,12 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
+    from . import users
+    app.register_blueprint(users.bp)
+
     @app.route("/")
     def root():
         return "<p>lol</p>"
-
-    @app.route("/login")
-    def login():
-        return "login get"
-
-    @app.route("/register")
-    def register():
-        return "register get"
 
     @app.route("/questions", methods=["GET", "POST"])
     def questions():
