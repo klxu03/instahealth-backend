@@ -19,17 +19,17 @@ ROLES = [
 def login():
     try:
         data = request.get_json(force=True)
-        email = data["email"]
+        username = data["username"]
         password = data["password"]
         db = get_db()
 
         row = db.execute(
-            "SELECT * FROM users WHERE email = ?",
-            [email],
+            "SELECT * FROM users WHERE username = ?",
+            [username],
         ).fetchone()
 
         if row is None:
-            raise ValueError("email is not registered")
+            raise ValueError("username is not registered")
         if not check_password_hash(user["password"], password):
             raise ValueError("password is incorrect")
 
@@ -42,29 +42,29 @@ def login():
 def register():
     try:
         data = request.get_json(force=True)
-        email = data["email"]
+        username = data["username"]
         password = data["password"]
         role = data["role"]
         db = get_db()
 
-        if not email:
-            raise ValueError("email is required")
+        if not username:
+            raise ValueError("username is required")
         if not password:
             raise ValueError("password is required")
         if role not in ROLES:
             raise ValueError(f"role not in {', '.join(ROLES)}")
         if db.execute(
-            "SELECT id FROM users WHERE email = ?",
-            [email],
+            "SELECT id FROM users WHERE username = ?",
+            [username],
         ).fetchone() is not None:
-            raise ValueError("email already registered")
+            raise ValueError("username already registered")
 
         db.execute(
             (
-                "INSERT INTO users (email, password, role)"
+                "INSERT INTO users (username, password, role)"
                 " VALUES (?, ?, ?)"
             ),
-            [email, generate_password_hash(password), role],
+            [username, generate_password_hash(password), role],
         )
         db.commit()
 
