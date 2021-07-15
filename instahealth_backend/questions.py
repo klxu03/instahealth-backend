@@ -24,24 +24,28 @@ def format_question(row):
     data["categories"] = row["categories"].split()
 
     question_id = data["id"]
-    rows = db.execute(
-        "SELECT * FROM answers WHERE questionId = ?",
-        [question_id],
-    ).fetchall()
-    answers = data["answers"] = []
-    for row in rows:
-        answers.append({
-            key: row[key]
-            for key in [
-                "id",
-                "content",
-                "authorName",
-                "role",
-                "datePosted",
-            ]
-        })
+    data["answers"] = [
+        format_answer(row)
+        for row in db.execute(
+            "SELECT * FROM answers WHERE questionId = ?",
+            [question_id],
+        ).fetchall()
+    ]
 
     return data
+
+def format_answer(row):
+    return {
+        key: row[key]
+        for key in [
+            "id",
+            "questionId",
+            "content",
+            "authorName",
+            "role",
+            "datePosted",
+        ]
+    }
 
 def _add_question(data):
     db = get_db()
