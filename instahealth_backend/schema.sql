@@ -6,3 +6,13 @@ CREATE TABLE users (
 	password TEXT NOT NULL,
 	role TEXT NOT NULL
 );
+
+DROP TABLE IF EXISTS questions;
+
+CREATE TABLE questions (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	question TEXT NOT NULL,
+	content TEXT NOT NULL,
+	authorName TEXT NOT NULL,
+	datePosted INTEGER DEFAULT (CAST(strftime('%s','now') as int))
+);

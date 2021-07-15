@@ -17,15 +17,11 @@ def create_app(test_config=None):
     from . import users
     app.register_blueprint(users.bp)
 
+    from . import questions
+    app.register_blueprint(questions.bp)
+
     @app.route("/")
     def root():
         return "<p>lol</p>"
-
-    @app.route("/questions", methods=["GET", "POST"])
-    def questions():
-        if request.method == "GET":
-            return "questions get"
-        else:
-            return "questions post"
 
     return app
