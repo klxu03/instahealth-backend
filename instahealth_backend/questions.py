@@ -44,7 +44,11 @@ def questions_all():
             )
             db.commit()
 
-            return "", 200
+            last_row_id = (
+                db.execute("SELECT LAST_INSERT_ROWID()")
+                .fetchone()["LAST_INSERT_ROWID()"]
+            )
+            return {"id": last_row_id}, 200
 
     except Exception as e:
         return str(e), 400
